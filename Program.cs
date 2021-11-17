@@ -11,7 +11,7 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.MapGet("/Config", () =>
+app.MapGet("/config", () =>
 {
     var configurationRoot = new ConfigurationBuilder()
              .SetBasePath(AppContext.BaseDirectory)

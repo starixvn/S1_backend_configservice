@@ -11,9 +11,9 @@
 
     public class Connectionstrings
     {
-        public string? Main { get; set; }
-        public string? Report { get; set; }
-        public string? Wager { get; set; }
+        public string? MainDB { get; set; }
+        public string? ReportDB { get; set; }
+        public string? WagerDB { get; set; }
     }
 
 }
