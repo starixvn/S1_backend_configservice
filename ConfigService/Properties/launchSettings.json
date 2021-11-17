@@ -1,0 +1,14 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "ConfigService": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        //"DBGroup": "Leobet"
+      },
+      "applicationUrl": "http://localhost:7242/Local/Nova/"
+    }
+  }
+} 
