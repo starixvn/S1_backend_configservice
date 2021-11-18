@@ -3,12 +3,11 @@
   "profiles": {
     "ConfigService": {
       "commandName": "Project",
-      "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "http://localhost:7242/config",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Local"
-      }
+      },
+      "applicationUrl": "http://localhost:7242/"
     }
   }
-}
+} 
