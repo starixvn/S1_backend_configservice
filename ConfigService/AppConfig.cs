@@ -11,9 +11,13 @@
 
     public class Connectionstrings
     {
-        public string? MainDB { get; set; }
-        public string? ReportDB { get; set; }
-        public string? WagerDB { get; set; }
+        public string? API_MainDB { get; set; }
+        public string? API_ReportDB { get; set; }
+        public string? API_WagerDB { get; set; }
+
+        public string? Worker_MainDB { get; set; }
+        public string? Worker_ReportDB { get; set; }
+        public string? Worker_WagerDB { get; set; }
     }
 
 }
