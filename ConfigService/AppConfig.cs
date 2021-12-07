@@ -6,7 +6,7 @@
 
         public string? ProxyHost { get; set; }
 
-        public int? ProxyPort { get; set; }
+        public int ProxyPort { get; set; }
     }
 
     public class Connectionstrings
