@@ -11,6 +11,11 @@
 
     public class Connectionstrings
     {
+        public string? ConnectionString { get; set; }
+        public string? ConnectionStringReport { get; set; }
+        public string? ConnectionStringWager { get; set; }
+        public string? ConnectionStringLog { get; set; }
+
         public string? API_MainDB { get; set; }
         public string? API_ReportDB { get; set; }
         public string? API_WagerDB { get; set; }
