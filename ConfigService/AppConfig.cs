@@ -7,6 +7,7 @@
         public string? ProxyHost { get; set; }
 
         public int ProxyPort { get; set; }
+        public string? RedisConnection { get; set; }
     }
 
     public class Connectionstrings
