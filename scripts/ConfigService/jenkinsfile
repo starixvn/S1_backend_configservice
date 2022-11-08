@@ -21,8 +21,8 @@ pipeline {
         stage('Deploy') {
             agent { node { label 'master' } }
             steps {
-                sh 'ansible-playbook -i ${ansible_path}/DEV.AWS.yml ${ansible_path}/deploy.yml --extra-vars "host=linux-dev docker_name=dev_configservice image=configservice/configservice:${version} env=Development docker_ports=7242:7242 volume=volume:[]"'
-                sh 'ansible-playbook -i ${ansible_path}/DEV.AWS.yml ${ansible_path}/deploy.yml --extra-vars "host=linux-dev docker_name=local_configservice image=configservice/configservice:${version} env=Local docker_ports=7243:7242 volume=volume:[]"'
+                sh 'ansible-playbook -i ${ansible_path}/DEV.AWS.yml ${ansible_path}/deploy.yml --extra-vars "host=linux-dev docker_name=dev_configservice image=configservice/configservice:${version} env=Development docker_ports=7242:7242 volume=[]"'
+                sh 'ansible-playbook -i ${ansible_path}/DEV.AWS.yml ${ansible_path}/deploy.yml --extra-vars "host=linux-dev docker_name=local_configservice image=configservice/configservice:${version} env=Local docker_ports=7243:7242 volume=[]"'
             }
         }
     }
