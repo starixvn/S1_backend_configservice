@@ -16,6 +16,11 @@ app.MapGet("/", () =>
     return JsonConvert.SerializeObject(appConfig);
 });
 
+app.MapGet("/health", async context =>
+{
+    await context.Response.WriteAsync($"{builder.Environment.EnvironmentName}-{DateTime.Now:yyyy/MM/dd HH:mm:ss}");
+});
+
 app.Run();
 
 
