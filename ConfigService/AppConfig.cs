@@ -25,7 +25,7 @@
                 if (config.Worker_User != null && name.StartsWith("Worker_"))
                 {
                     var (user, password) = GetUserAndPassword(value);
-                    var conn = value.Replace(user, config.API_User).Replace(password, config.API_Password);
+                    var conn = value.Replace(user, config.Worker_User).Replace(password, config.Worker_Password);
                     prop.SetValue(ConnectionStrings, conn);
                 }
             }
