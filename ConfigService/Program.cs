@@ -4,18 +4,16 @@ using Newtonsoft.Json;
 var builder = WebApplication.CreateBuilder(args);
 var _serviceConfig = new Dictionary<string, ServiceConfig>(builder.Configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
 var app = builder.Build();
+var appConfig = new AppConfig();
+builder.Configuration.Bind(appConfig);
 
 app.MapGet("/", () =>
 {
-    var appConfig = new AppConfig();
-    builder.Configuration.Bind(appConfig);
     return JsonConvert.SerializeObject(appConfig);
 });
 
 app.MapGet("/{serviceName}", (string serviceName) =>
 {
-    var appConfig = new AppConfig();
-    builder.Configuration.Bind(appConfig);
     if (_serviceConfig.TryGetValue(serviceName, out var config))
     {
         appConfig.ChangeUserAndPassWord(config);
