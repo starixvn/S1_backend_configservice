@@ -1,24 +1,24 @@
 using ConfigService;
-using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-var _serviceConfig = new Dictionary<string, ServiceConfig>(builder.Configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
 var app = builder.Build();
 var appConfig = new AppConfig();
 builder.Configuration.Bind(appConfig);
 
 app.MapGet("/", () =>
 {
-    return JsonConvert.SerializeObject(appConfig);
+    return appConfig;
 });
 
+//依照服務指定Config
+var _serviceConfig = new Dictionary<string, ServiceConfig>(builder.Configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
 app.MapGet("/{serviceName}", (string serviceName) =>
 {
     if (_serviceConfig.TryGetValue(serviceName, out var config))
     {
         appConfig.ChangeUserAndPassWord(config);
     }
-    return JsonConvert.SerializeObject(appConfig);
+    return appConfig;
 });
 
 app.MapGet("/health", async context =>
