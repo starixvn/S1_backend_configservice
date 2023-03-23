@@ -1,19 +1,30 @@
 using ConfigService;
-using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
+var appConfig = new AppConfig();
+builder.Configuration.Bind(appConfig);
 
 app.MapGet("/", () =>
 {
-    var appConfig = new AppConfig();
-    builder.Configuration.Bind(appConfig);
-    return JsonConvert.SerializeObject(appConfig);
+    return appConfig;
+});
+
+//依照服務指定Config
+var _serviceConfig = new Dictionary<string, ServiceConfig>(builder.Configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
+app.MapGet("/{serviceName}", (string serviceName) =>
+{  
+    if (_serviceConfig.TryGetValue(serviceName, out var config))
+    {
+        var serviceConfig = new AppConfig();
+        builder.Configuration.Bind(serviceConfig);
+        serviceConfig.ChangeUserAndPassWord(config);
+        return serviceConfig;
+    }
+    else
+    {
+        return appConfig;
+    }  
 });
 
 app.MapGet("/health", async context =>
