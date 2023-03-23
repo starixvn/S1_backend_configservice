@@ -13,12 +13,18 @@ app.MapGet("/", () =>
 //依照服務指定Config
 var _serviceConfig = new Dictionary<string, ServiceConfig>(builder.Configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
 app.MapGet("/{serviceName}", (string serviceName) =>
-{
+{  
     if (_serviceConfig.TryGetValue(serviceName, out var config))
     {
-        appConfig.ChangeUserAndPassWord(config);
+        var serviceConfig = new AppConfig();
+        builder.Configuration.Bind(serviceConfig);
+        serviceConfig.ChangeUserAndPassWord(config);
+        return serviceConfig;
     }
-    return appConfig;
+    else
+    {
+        return appConfig;
+    }  
 });
 
 app.MapGet("/health", async context =>
