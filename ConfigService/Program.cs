@@ -27,6 +27,31 @@ app.MapGet("/{serviceName}", (string serviceName) =>
     }  
 });
 
+app.MapGet("/local/{group}/{serviceName?}", (string group, string serviceName) =>
+{
+    var basePath = Path.Combine(Directory.GetCurrentDirectory(), "LocalAppConfig"); 
+    var builder = new ConfigurationBuilder().SetBasePath(basePath).AddJsonFile($"{group.ToLower()}.json", optional: true, reloadOnChange: true);
+   
+    var configuration = builder.Build();    
+    var localConfig = new AppConfig();
+    configuration.Bind(localConfig);
+    try
+    {
+        var _serviceConfig = new Dictionary<string, ServiceConfig>(configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
+        if (serviceName is not null && _serviceConfig.TryGetValue(serviceName, out var config))
+        {
+            localConfig.ChangeUserAndPassWord(config);
+        }
+
+        return localConfig;       
+    }
+    catch (Exception)
+    {
+
+        return localConfig;
+    }
+});
+
 app.MapGet("/health", async context =>
 {
     await context.Response.WriteAsync($"{builder.Environment.EnvironmentName}-{DateTime.Now:yyyy/MM/dd HH:mm:ss}");
