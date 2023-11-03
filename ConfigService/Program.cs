@@ -27,7 +27,6 @@ app.MapGet("/{serviceName}", (string serviceName) =>
     }  
 });
 
-
 app.MapGet("/local/{group}/{serviceName?}", (string group, string serviceName) =>
 {
     var basePath = Path.Combine(Directory.GetCurrentDirectory(), "LocalAppConfig"); 
