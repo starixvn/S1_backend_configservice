@@ -28,10 +28,10 @@ app.MapGet("/{serviceName}", (string serviceName) =>
 });
 
 
-app.MapGet("/Local/{group}/{serviceName?}", (string group, string serviceName) =>
+app.MapGet("/local/{group}/{serviceName?}", (string group, string serviceName) =>
 {
     var basePath = Path.Combine(Directory.GetCurrentDirectory(), "LocalAppConfig"); 
-    var builder = new ConfigurationBuilder().SetBasePath(basePath).AddJsonFile($"{group}.json", optional: true, reloadOnChange: true);
+    var builder = new ConfigurationBuilder().SetBasePath(basePath).AddJsonFile($"{group.ToLower()}.json", optional: true, reloadOnChange: true);
    
     var configuration = builder.Build();    
     var localConfig = new AppConfig();
