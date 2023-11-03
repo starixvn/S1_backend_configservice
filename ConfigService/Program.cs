@@ -33,18 +33,22 @@ app.MapGet("/Local/{group}/{serviceName?}", (string group, string serviceName) =
     var basePath = Path.Combine(Directory.GetCurrentDirectory(), "LocalAppConfig"); 
     var builder = new ConfigurationBuilder().SetBasePath(basePath).AddJsonFile($"{group}.json", optional: true, reloadOnChange: true);
    
-    var configuration = builder.Build();
-    
+    var configuration = builder.Build();    
     var localConfig = new AppConfig();
     configuration.Bind(localConfig);
-    var _serviceConfig = new Dictionary<string, ServiceConfig>(configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
-    if (serviceName is not null && _serviceConfig.TryGetValue(serviceName, out var config))
+    try
     {
-        localConfig.ChangeUserAndPassWord(config);
-        return localConfig;
+        var _serviceConfig = new Dictionary<string, ServiceConfig>(configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
+        if (serviceName is not null && _serviceConfig.TryGetValue(serviceName, out var config))
+        {
+            localConfig.ChangeUserAndPassWord(config);
+        }
+
+        return localConfig;       
     }
-    else
+    catch (Exception)
     {
+
         return localConfig;
     }
 });
