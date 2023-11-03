@@ -7,7 +7,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Local"
       },
-      "applicationUrl": "http://localhost:7242/"
+      "applicationUrl": "http://localhost:7243/Local/Nova/"
     }
   }
 } 
