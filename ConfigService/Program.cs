@@ -30,7 +30,7 @@ app.MapGet("/{serviceName}", (string serviceName) =>
 app.MapGet("/local/{group?}/{serviceName?}", (string group, string serviceName) =>
 {
     group ??= "Nova";
-    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "LocalAppConfig", $"{group.ToLower()}.json"); 
+    var filePath = Path.Combine(AppContext.BaseDirectory, "LocalAppConfig", $"{group.ToLower()}.json"); 
     var builder = new ConfigurationBuilder().AddJsonFile(filePath, optional: true, reloadOnChange: true);
    
     var configuration = builder.Build();    
