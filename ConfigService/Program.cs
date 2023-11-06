@@ -36,19 +36,7 @@ app.MapGet("/local/{group?}/{serviceName?}", (string group, string serviceName) 
     var configuration = builder.Build();    
     var localConfig = new AppConfig();
     configuration.Bind(localConfig);
-    try
-    {
-        var _serviceConfig = new Dictionary<string, ServiceConfig>(configuration.GetSection("ServiceConfig").Get<Dictionary<string, ServiceConfig>>(), StringComparer.OrdinalIgnoreCase);
-        if (serviceName is not null && _serviceConfig.TryGetValue(serviceName, out var config))
-        {
-            localConfig.ChangeUserAndPassWord(config);
-        }
-        return localConfig;       
-    }
-    catch (Exception)
-    {
-        return localConfig;
-    }
+    return localConfig;
 });
 
 app.MapGet("/health", async context =>
