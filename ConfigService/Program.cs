@@ -27,8 +27,10 @@ app.MapGet("/{serviceName}", (string serviceName) =>
     }  
 });
 
-app.MapGet("/local/{group}/{serviceName?}", (string group, string serviceName) =>
+app.MapGet("/local/{group?}/{serviceName?}", (string group, string serviceName) =>
 {
+    group ??= "Nova"; 
+
     var basePath = Path.Combine(Directory.GetCurrentDirectory(), "LocalAppConfig"); 
     var builder = new ConfigurationBuilder().SetBasePath(basePath).AddJsonFile($"{group.ToLower()}.json", optional: true, reloadOnChange: true);
    
