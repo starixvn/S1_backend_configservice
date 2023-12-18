@@ -58,6 +58,8 @@
         public string API_LogDB { get; set; }
         public string API_IPTable { get; set; }
         public string API_ReportIPTable { get; set; }
+        public string API_ReportDB_34 { get; set; }
+        public string API_ReportDB_32 { get; set; }
 
         public string Worker_MainDB { get; set; }
         public string Worker_ReportDB { get; set; }
@@ -65,6 +67,8 @@
         public string Worker_LogDB { get; set; }
         public string Worker_IPTable { get; set; }
         public string Worker_ReportIPTable { get; set; }
+        public string Worker_ReportDB_34 { get; set; }
+        public string Worker_ReportDB_32 { get; set; }
     }
 
 }
