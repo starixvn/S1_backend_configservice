@@ -45,6 +45,8 @@
 
     public class Connectionstrings
     {
+        #region 保留給舊的連線字串使用
+
         public string ConnectionString { get; set; }
         public string ConnectionStringReport { get; set; }
         public string ConnectionStringWager { get; set; }
@@ -52,14 +54,22 @@
         public string ConnectionStringIPTable { get; set; }
         public string ConnectionStringReportIPTable { get; set; }
 
+        #endregion
+
+        #region ServiceType:API
+
         public string API_MainDB { get; set; }
         public string API_ReportDB { get; set; }
         public string API_WagerDB { get; set; }
         public string API_LogDB { get; set; }
         public string API_IPTable { get; set; }
         public string API_ReportIPTable { get; set; }
-        public string API_ReportDB_34 { get; set; }
-        public string API_ReportDB_32 { get; set; }
+        public string API_ReportBackupDB1 { get; set; }
+        public string API_ReportBackupDB2 { get; set; }
+
+        #endregion
+
+        #region ServiceType:Worker
 
         public string Worker_MainDB { get; set; }
         public string Worker_ReportDB { get; set; }
@@ -67,8 +77,10 @@
         public string Worker_LogDB { get; set; }
         public string Worker_IPTable { get; set; }
         public string Worker_ReportIPTable { get; set; }
-        public string Worker_ReportDB_34 { get; set; }
-        public string Worker_ReportDB_32 { get; set; }
+        public string Worker_ReportBackupDB1 { get; set; }
+        public string Worker_ReportBackupDB2 { get; set; }
+
+        #endregion
     }
 
 }
