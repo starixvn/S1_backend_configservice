@@ -24,7 +24,8 @@
     "Worker_IPTable": "server=52.221.52.107;port=3306;user=nova88;database=IPTable;password=Aa12345678!;SslMode=None;AllowPublicKeyRetrieval=true;",
     "Worker_ReportIPTable": "server=52.221.52.107;port=3306;user=nova88;database=IPTable;password=Aa12345678!;SslMode=None;AllowPublicKeyRetrieval=true;",
     "Worker_ReportBackupDB1": "server=52.221.52.107;port=3306;user=nova88;database=Siebog;password=Aa12345678!;SslMode=None;AllowPublicKeyRetrieval=true;",
-    "Worker_ReportBackupDB2": "server=52.221.52.107;port=3306;user=nova88;database=Siebog;password=Aa12345678!;SslMode=None;AllowPublicKeyRetrieval=true;"
+    "Worker_ReportBackupDB2": "server=52.221.52.107;port=3306;user=nova88;database=Siebog;password=Aa12345678!;SslMode=None;AllowPublicKeyRetrieval=true;",
+    "Worker_ReportCenter": "server=52.221.52.107;port=3306;user=worker_reportcenter;database=ReportCenter;password=worker_reportcenter;SslMode=None;AllowPublicKeyRetrieval=true;"
   },
   "RedisConnection": "18.141.246.46:6379,18.136.57.183:6379,password=Aa12345678!,ssl=false,syncTimeout=6000"
 }
