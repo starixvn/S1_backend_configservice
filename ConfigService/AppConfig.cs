@@ -66,6 +66,7 @@
         public string API_ReportIPTable { get; set; }
         public string API_ReportBackupDB1 { get; set; }
         public string API_ReportBackupDB2 { get; set; }
+        public string API_ReportCenter { get; set; }
 
         #endregion
 
@@ -79,6 +80,7 @@
         public string Worker_ReportIPTable { get; set; }
         public string Worker_ReportBackupDB1 { get; set; }
         public string Worker_ReportBackupDB2 { get; set; }
+        public string Worker_ReportCenter { get; set; }
 
         #endregion
     }
