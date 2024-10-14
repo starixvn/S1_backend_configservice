@@ -62,7 +62,8 @@ app.MapGet("/health", async context =>
 // 取得指定dbGroup設定檔
 AppConfig GetCustomizeAppConfig(string env, string dbGroup)
 {
-    var filePath = Path.Combine(AppContext.BaseDirectory, $"appsettings.{env}.{dbGroup}.json");
+    //var filePath = Path.Combine(AppContext.BaseDirectory, $"appsettings.{env}.{dbGroup}.json");
+    var filePath = Path.Combine(AppContext.BaseDirectory, $"appsettings.json");
     var configurationBuilder = new ConfigurationBuilder().AddJsonFile(filePath, optional: true, reloadOnChange: true);
 
     var configuration = configurationBuilder.Build();
