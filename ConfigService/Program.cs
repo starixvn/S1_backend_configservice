@@ -1,5 +1,5 @@
 using ConfigService;
- 
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 var appConfig = new AppConfig();
@@ -10,10 +10,10 @@ var env = builder.Environment.EnvironmentName;
 
 // 沒有dbGroup名使用 ex：appsettings.Development.json
 // 有dbGroup名稱使用 ex：appsettings.Development.Leobet.json
-app.MapGet("/", () => string.IsNullOrEmpty(dbGroup)
-    ? appConfig
-    : GetCustomizeAppConfig(env, dbGroup));
-
+//app.MapGet("/", () => string.IsNullOrEmpty(dbGroup)
+//    ? appConfig
+//    : GetCustomizeAppConfig(env, dbGroup));
+app.MapGet("/", () => GetCustomizeAppConfig(env, dbGroup));
 
 // 依照服務指定Config
 // 沒有dbGroup名使用 ex：appsettings.Development.json
@@ -62,6 +62,7 @@ AppConfig GetCustomizeAppConfig(string env, string dbGroup)
     var configuration = configurationBuilder.Build();
     var customizeAppConfig = new AppConfig();
     configuration.Bind(customizeAppConfig);
+    customizeAppConfig.DecryptCustomizeAppConfig();
     return customizeAppConfig;
 }
 

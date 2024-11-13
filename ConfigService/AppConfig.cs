@@ -1,4 +1,7 @@
-﻿namespace ConfigService
+﻿using System.Data.Common;
+using Fanex.Data;
+
+namespace ConfigService
 {
     public class AppConfig
     {
@@ -42,6 +45,45 @@
             var passwordEndIndex = value.IndexOf(';', passwordStartIndex);
             var password = value.Substring(passwordStartIndex, passwordEndIndex - passwordStartIndex);
             return (user, password);
+        }
+
+        public void DecryptCustomizeAppConfig()
+        {
+            ConnectionStrings.ConnectionString = DecryptPassword(ConnectionStrings.ConnectionString);
+            ConnectionStrings.ConnectionStringReport = DecryptPassword(ConnectionStrings.ConnectionStringReport);
+            ConnectionStrings.ConnectionStringWager = DecryptPassword(ConnectionStrings.ConnectionStringWager);
+            ConnectionStrings.ConnectionStringLog = DecryptPassword(ConnectionStrings.ConnectionStringLog);
+            ConnectionStrings.ConnectionStringIPTable = DecryptPassword(ConnectionStrings.ConnectionStringIPTable);
+            ConnectionStrings.ConnectionStringReportIPTable = DecryptPassword(ConnectionStrings.ConnectionStringReportIPTable);
+            ConnectionStrings.API_MainDB = DecryptPassword(ConnectionStrings.API_MainDB);
+            ConnectionStrings.API_ReportDB = DecryptPassword(ConnectionStrings.API_ReportDB);
+            ConnectionStrings.API_WagerDB = DecryptPassword(ConnectionStrings.API_WagerDB);
+            ConnectionStrings.API_LogDB = DecryptPassword(ConnectionStrings.API_LogDB);
+            ConnectionStrings.API_IPTable = DecryptPassword(ConnectionStrings.API_IPTable);
+            ConnectionStrings.API_ReportIPTable = DecryptPassword(ConnectionStrings.API_ReportIPTable);
+            ConnectionStrings.API_ReportBackupDB1 = DecryptPassword(ConnectionStrings.API_ReportBackupDB1);
+            ConnectionStrings.API_ReportBackupDB2 = DecryptPassword(ConnectionStrings.API_ReportBackupDB2);
+            ConnectionStrings.API_ReportCenter = DecryptPassword(ConnectionStrings.API_ReportCenter);
+            ConnectionStrings.Worker_MainDB = DecryptPassword(ConnectionStrings.Worker_MainDB);
+            ConnectionStrings.Worker_ReportDB = DecryptPassword(ConnectionStrings.Worker_ReportDB);
+            ConnectionStrings.Worker_WagerDB = DecryptPassword(ConnectionStrings.Worker_WagerDB);
+            ConnectionStrings.Worker_LogDB = DecryptPassword(ConnectionStrings.Worker_LogDB);
+            ConnectionStrings.Worker_IPTable = DecryptPassword(ConnectionStrings.Worker_IPTable);
+            ConnectionStrings.Worker_ReportIPTable = DecryptPassword(ConnectionStrings.Worker_ReportIPTable);
+            ConnectionStrings.Worker_ReportBackupDB1 = DecryptPassword(ConnectionStrings.Worker_ReportBackupDB1);
+            ConnectionStrings.Worker_ReportBackupDB2 = DecryptPassword(ConnectionStrings.Worker_ReportBackupDB2);
+            ConnectionStrings.Worker_ReportCenter = DecryptPassword(ConnectionStrings.Worker_ReportCenter);
+        }
+
+        private static string DecryptPassword(string customizeAppConfig)
+        {
+            var builder = new DbConnectionStringBuilder
+            {
+                ConnectionString = customizeAppConfig
+            };
+
+            builder["password"] = Cryptography.DecryptPassword(builder["password"].ToString());
+            return builder.ConnectionString;
         }
     }
 
