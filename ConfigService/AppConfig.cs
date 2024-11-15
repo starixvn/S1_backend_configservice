@@ -1,10 +1,16 @@
 ﻿using System.Data.Common;
-using Fanex.Data;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace ConfigService
 {
     public class AppConfig
     {
+        private static readonly DESCryptoServiceProvider CryptoServiceProvider = new DESCryptoServiceProvider();
+
+        private static readonly byte[] RgbKey = new byte[8] { 33, 99, 84, 90, 145, 172, 110, 204 };
+
+        private static readonly byte[] RgbIv = Encoding.UTF8.GetBytes("&％#@?,:*!~^.");
         public Connectionstrings ConnectionStrings { get; set; }
 
         public ServiceHosts ServiceHosts { get; set; }
@@ -49,41 +55,94 @@ namespace ConfigService
 
         public void DecryptCustomizeAppConfig()
         {
-            ConnectionStrings.ConnectionString = DecryptPassword(ConnectionStrings.ConnectionString);
-            ConnectionStrings.ConnectionStringReport = DecryptPassword(ConnectionStrings.ConnectionStringReport);
-            ConnectionStrings.ConnectionStringWager = DecryptPassword(ConnectionStrings.ConnectionStringWager);
-            ConnectionStrings.ConnectionStringLog = DecryptPassword(ConnectionStrings.ConnectionStringLog);
-            ConnectionStrings.ConnectionStringIPTable = DecryptPassword(ConnectionStrings.ConnectionStringIPTable);
-            ConnectionStrings.ConnectionStringReportIPTable = DecryptPassword(ConnectionStrings.ConnectionStringReportIPTable);
-            ConnectionStrings.API_MainDB = DecryptPassword(ConnectionStrings.API_MainDB);
-            ConnectionStrings.API_ReportDB = DecryptPassword(ConnectionStrings.API_ReportDB);
-            ConnectionStrings.API_WagerDB = DecryptPassword(ConnectionStrings.API_WagerDB);
-            ConnectionStrings.API_LogDB = DecryptPassword(ConnectionStrings.API_LogDB);
-            ConnectionStrings.API_IPTable = DecryptPassword(ConnectionStrings.API_IPTable);
-            ConnectionStrings.API_ReportIPTable = DecryptPassword(ConnectionStrings.API_ReportIPTable);
-            ConnectionStrings.API_ReportBackupDB1 = DecryptPassword(ConnectionStrings.API_ReportBackupDB1);
-            ConnectionStrings.API_ReportBackupDB2 = DecryptPassword(ConnectionStrings.API_ReportBackupDB2);
-            ConnectionStrings.API_ReportCenter = DecryptPassword(ConnectionStrings.API_ReportCenter);
-            ConnectionStrings.Worker_MainDB = DecryptPassword(ConnectionStrings.Worker_MainDB);
-            ConnectionStrings.Worker_ReportDB = DecryptPassword(ConnectionStrings.Worker_ReportDB);
-            ConnectionStrings.Worker_WagerDB = DecryptPassword(ConnectionStrings.Worker_WagerDB);
-            ConnectionStrings.Worker_LogDB = DecryptPassword(ConnectionStrings.Worker_LogDB);
-            ConnectionStrings.Worker_IPTable = DecryptPassword(ConnectionStrings.Worker_IPTable);
-            ConnectionStrings.Worker_ReportIPTable = DecryptPassword(ConnectionStrings.Worker_ReportIPTable);
-            ConnectionStrings.Worker_ReportBackupDB1 = DecryptPassword(ConnectionStrings.Worker_ReportBackupDB1);
-            ConnectionStrings.Worker_ReportBackupDB2 = DecryptPassword(ConnectionStrings.Worker_ReportBackupDB2);
-            ConnectionStrings.Worker_ReportCenter = DecryptPassword(ConnectionStrings.Worker_ReportCenter);
+            ConnectionStrings.ConnectionString = DecryptConnectionString(ConnectionStrings.ConnectionString);
+            ConnectionStrings.ConnectionStringReport = DecryptConnectionString(ConnectionStrings.ConnectionStringReport);
+            ConnectionStrings.ConnectionStringWager = DecryptConnectionString(ConnectionStrings.ConnectionStringWager);
+            ConnectionStrings.ConnectionStringLog = DecryptConnectionString(ConnectionStrings.ConnectionStringLog);
+            ConnectionStrings.ConnectionStringIPTable = DecryptConnectionString(ConnectionStrings.ConnectionStringIPTable);
+            ConnectionStrings.ConnectionStringReportIPTable = DecryptConnectionString(ConnectionStrings.ConnectionStringReportIPTable);
+            ConnectionStrings.API_MainDB = DecryptConnectionString(ConnectionStrings.API_MainDB);
+            ConnectionStrings.API_ReportDB = DecryptConnectionString(ConnectionStrings.API_ReportDB);
+            ConnectionStrings.API_WagerDB = DecryptConnectionString(ConnectionStrings.API_WagerDB);
+            ConnectionStrings.API_LogDB = DecryptConnectionString(ConnectionStrings.API_LogDB);
+            ConnectionStrings.API_IPTable = DecryptConnectionString(ConnectionStrings.API_IPTable);
+            ConnectionStrings.API_ReportIPTable = DecryptConnectionString(ConnectionStrings.API_ReportIPTable);
+            ConnectionStrings.API_ReportBackupDB1 = DecryptConnectionString(ConnectionStrings.API_ReportBackupDB1);
+            ConnectionStrings.API_ReportBackupDB2 = DecryptConnectionString(ConnectionStrings.API_ReportBackupDB2);
+            ConnectionStrings.API_ReportCenter = DecryptConnectionString(ConnectionStrings.API_ReportCenter);
+            ConnectionStrings.Worker_MainDB = DecryptConnectionString(ConnectionStrings.Worker_MainDB);
+            ConnectionStrings.Worker_ReportDB = DecryptConnectionString(ConnectionStrings.Worker_ReportDB);
+            ConnectionStrings.Worker_WagerDB = DecryptConnectionString(ConnectionStrings.Worker_WagerDB);
+            ConnectionStrings.Worker_LogDB = DecryptConnectionString(ConnectionStrings.Worker_LogDB);
+            ConnectionStrings.Worker_IPTable = DecryptConnectionString(ConnectionStrings.Worker_IPTable);
+            ConnectionStrings.Worker_ReportIPTable = DecryptConnectionString(ConnectionStrings.Worker_ReportIPTable);
+            ConnectionStrings.Worker_ReportBackupDB1 = DecryptConnectionString(ConnectionStrings.Worker_ReportBackupDB1);
+            ConnectionStrings.Worker_ReportBackupDB2 = DecryptConnectionString(ConnectionStrings.Worker_ReportBackupDB2);
+            ConnectionStrings.Worker_ReportCenter = DecryptConnectionString(ConnectionStrings.Worker_ReportCenter);
         }
 
-        private static string DecryptPassword(string customizeAppConfig)
-        {
-            var builder = new DbConnectionStringBuilder
-            {
-                ConnectionString = customizeAppConfig
-            };
 
-            builder["password"] = Cryptography.DecryptPassword(builder["password"].ToString());
-            return builder.ConnectionString;
+        private static string DecryptConnectionString(string connectionString)
+        {
+            if (connectionString == null)
+            {
+                throw new ArgumentNullException("connectionString");
+            }
+
+            DbConnectionStringBuilder dbConnectionStringBuilder = new DbConnectionStringBuilder
+            {
+                ConnectionString = connectionString
+            };
+            string password = dbConnectionStringBuilder["password"].ToString();
+            if (!string.IsNullOrEmpty(password))
+            {
+                string newPassword = DecryptPassword(password);
+                dbConnectionStringBuilder["password"] = newPassword;
+                return dbConnectionStringBuilder.ToString();
+            }
+
+            return connectionString;
+        }
+
+        private static string EncryptPassword(string password)
+        {
+            if (password == null)
+            {
+                throw new ArgumentNullException("password");
+            }
+
+            using ICryptoTransform transform = ((SymmetricAlgorithm)(object)CryptoServiceProvider).CreateEncryptor(RgbKey, RgbIv);
+            using MemoryStream memoryStream = new MemoryStream();
+            using CryptoStream cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Write);
+            byte[] bytes = Encoding.UTF8.GetBytes(password);
+            cryptoStream.Write(bytes, 0, bytes.Length);
+            cryptoStream.FlushFinalBlock();
+            return Convert.ToBase64String(memoryStream.ToArray());
+        }
+
+        private static string DecryptPassword(string encryptedPassword)
+        {
+            if (encryptedPassword == null)
+            {
+                throw new ArgumentNullException("encryptedPassword");
+            }
+
+            string s = StandardizeEncryptedPasswordLength(encryptedPassword);
+            byte[] buffer = Convert.FromBase64String(s);
+            using MemoryStream stream = new MemoryStream(buffer);
+            using ICryptoTransform transform = ((SymmetricAlgorithm)(object)CryptoServiceProvider).CreateDecryptor(RgbKey, RgbIv);
+            using StreamReader streamReader = new StreamReader(new CryptoStream(stream, transform, CryptoStreamMode.Read));
+            return streamReader.ReadToEnd().Trim();
+        }
+        private static string StandardizeEncryptedPasswordLength(string encryptedPassword)
+        {
+            string result = string.Empty;
+            if (!string.IsNullOrWhiteSpace(encryptedPassword))
+            {
+                result = encryptedPassword[..(encryptedPassword.Length >> 2 << 2)];
+            }
+
+            return result;
         }
     }
 

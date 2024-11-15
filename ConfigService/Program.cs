@@ -5,15 +5,20 @@ var app = builder.Build();
 var appConfig = new AppConfig();
 builder.Configuration.Bind(appConfig);
 
+var environmentName = builder.Configuration.GetValue<string>("Environment");
+if (!string.IsNullOrEmpty(environmentName))
+{
+    builder.Environment.EnvironmentName = environmentName;
+}
+
 var dbGroup = Environment.GetEnvironmentVariable("DBGroup") ?? string.Empty;
-var env = builder.Environment.EnvironmentName;
 
 // 沒有dbGroup名使用 ex：appsettings.Development.json
 // 有dbGroup名稱使用 ex：appsettings.Development.Leobet.json
 //app.MapGet("/", () => string.IsNullOrEmpty(dbGroup)
 //    ? appConfig
 //    : GetCustomizeAppConfig(env, dbGroup));
-app.MapGet("/", () => GetCustomizeAppConfig(env, dbGroup));
+app.MapGet("/", () => GetCustomizeAppConfig(environmentName, dbGroup));
 
 // 依照服務指定Config
 // 沒有dbGroup名使用 ex：appsettings.Development.json
@@ -25,7 +30,7 @@ app.MapGet("/{serviceName}", (string serviceName) =>
     {
         var serviceConfig = string.IsNullOrEmpty(dbGroup)
             ? new AppConfig()
-            : GetCustomizeAppConfig(env, dbGroup);
+            : GetCustomizeAppConfig(environmentName, dbGroup);
 
         if (string.IsNullOrEmpty(dbGroup)) //預設值才要需要再 Bind一次，GetCustomizeAppConfig 已經 Bind 過一次，Bind第二次會被蓋回 default 設定
         {
@@ -38,7 +43,7 @@ app.MapGet("/{serviceName}", (string serviceName) =>
 
     return string.IsNullOrEmpty(dbGroup)
         ? appConfig
-        : GetCustomizeAppConfig(env, dbGroup);
+        : GetCustomizeAppConfig(environmentName, dbGroup);
 });
 
 
@@ -49,7 +54,7 @@ app.MapGet("/local/{group?}/{serviceName?}", (string group, string serviceName) 
 
 app.MapGet("/health", async context =>
 {
-    await context.Response.WriteAsync($"{env}-{DateTime.Now:yyyy/MM/dd HH:mm:ss}");
+    await context.Response.WriteAsync($"{environmentName}-{DateTime.Now:yyyy/MM/dd HH:mm:ss}");
 });
 
 // 取得指定dbGroup設定檔
