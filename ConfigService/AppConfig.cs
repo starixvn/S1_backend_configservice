@@ -4,6 +4,8 @@
     {
         public Connectionstrings ConnectionStrings { get; set; }
 
+        public ServiceHosts ServiceHosts { get; set; }
+
         public string ProxyHost { get; set; }
 
         public int ProxyPort { get; set; }
@@ -17,7 +19,7 @@
                 var value = prop.GetValue(ConnectionStrings).ToString();
                 if (config.API_User != null && name.StartsWith("API_"))
                 {
-                    var (user, password) = GetUserAndPassword(value);        
+                    var (user, password) = GetUserAndPassword(value);
                     var conn = value.Replace(user, config.API_User).Replace(password, config.API_Password);
                     prop.SetValue(ConnectionStrings, conn);
                 }
@@ -83,6 +85,18 @@
         public string Worker_ReportCenter { get; set; }
 
         #endregion
+    }
+
+    public class ServiceHosts
+    {
+        public string CommonService { get; set; }
+        public string TpService { get; set; }
+        public string PayService { get; set; }
+        public string BonusService { get; set; }
+        public string StoreService { get; set; }
+        public string BackendService { get; set; }
+        public string SeamlessService { get; set; }
+        public string ReportService { get; set; }
     }
 
 }
