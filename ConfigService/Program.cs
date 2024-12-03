@@ -44,14 +44,7 @@ app.MapGet("/{serviceName}", (string serviceName) =>
 
 app.MapGet("/local/{group?}/{serviceName?}", (string group, string serviceName) =>
 {
-    group ??= "nova";
-    var filePath = Path.Combine(AppContext.BaseDirectory, "LocalAppConfig", $"{group.ToLower()}.json");
-    var configurationBuilder = new ConfigurationBuilder().AddJsonFile(filePath, optional: true, reloadOnChange: true);
-
-    var configuration = configurationBuilder.Build();
-    var localConfig = new AppConfig();
-    configuration.Bind(localConfig);
-    return localConfig;
+    return appConfig;
 });
 
 app.MapGet("/health", async context =>
