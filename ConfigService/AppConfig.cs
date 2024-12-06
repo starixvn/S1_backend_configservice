@@ -26,17 +26,17 @@ namespace ConfigService
             {
                 var name = prop.Name;
                 var value = prop.GetValue(ConnectionStrings).ToString();
-                if (config.API_User != null && name.StartsWith("API_"))
+                if (config.API_User != null && name.StartsWith("API_", StringComparison.OrdinalIgnoreCase))
                 {
                     var (user, password) = GetUserAndPassword(value);
-                    var conn = value.Replace(user, config.API_User).Replace(password, config.API_Password);
+                    var conn = value.Replace(user, config.API_User).Replace(password, DecryptPassword(config.API_Password));
                     prop.SetValue(ConnectionStrings, conn);
                 }
 
-                if (config.Worker_User != null && name.StartsWith("Worker_"))
+                if (config.Worker_User != null && name.StartsWith("Worker_", StringComparison.OrdinalIgnoreCase))
                 {
                     var (user, password) = GetUserAndPassword(value);
-                    var conn = value.Replace(user, config.Worker_User).Replace(password, config.Worker_Password);
+                    var conn = value.Replace(user, config.Worker_User).Replace(password, DecryptPassword(config.Worker_Password));
                     prop.SetValue(ConnectionStrings, conn);
                 }
             }
