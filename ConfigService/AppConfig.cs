@@ -15,6 +15,8 @@ namespace ConfigService
 
         public ServiceHosts ServiceHosts { get; set; }
 
+        public HangFireAuth HangFireAuth { get; set; }
+
         public string ProxyHost { get; set; }
 
         public int ProxyPort { get; set; }
@@ -79,6 +81,9 @@ namespace ConfigService
             ConnectionStrings.Worker_ReportBackupDB1 = DecryptConnectionString(ConnectionStrings.Worker_ReportBackupDB1);
             ConnectionStrings.Worker_ReportBackupDB2 = DecryptConnectionString(ConnectionStrings.Worker_ReportBackupDB2);
             ConnectionStrings.Worker_ReportCenter = DecryptConnectionString(ConnectionStrings.Worker_ReportCenter);
+
+            HangFireAuth.Username = DecryptPassword(HangFireAuth.Username);
+            HangFireAuth.Password = DecryptPassword(HangFireAuth.Password);
         }
 
 
@@ -102,22 +107,6 @@ namespace ConfigService
             }
 
             return connectionString;
-        }
-
-        private static string EncryptPassword(string password)
-        {
-            if (password == null)
-            {
-                throw new ArgumentNullException("password");
-            }
-
-            using ICryptoTransform transform = ((SymmetricAlgorithm)(object)CryptoServiceProvider).CreateEncryptor(RgbKey, RgbIv);
-            using MemoryStream memoryStream = new MemoryStream();
-            using CryptoStream cryptoStream = new CryptoStream(memoryStream, transform, CryptoStreamMode.Write);
-            byte[] bytes = Encoding.UTF8.GetBytes(password);
-            cryptoStream.Write(bytes, 0, bytes.Length);
-            cryptoStream.FlushFinalBlock();
-            return Convert.ToBase64String(memoryStream.ToArray());
         }
 
         private static string DecryptPassword(string encryptedPassword)
@@ -200,6 +189,11 @@ namespace ConfigService
         public string ReportService { get; set; }
     }
 
+    public class HangFireAuth
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+    }
 }
 
 
