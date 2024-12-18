@@ -38,7 +38,7 @@ app.MapGet("/{serviceName}", (string serviceName) =>
 
     return string.IsNullOrEmpty(dbGroup)
         ? appConfig
-        : GetCustomizeAppConfig(env, dbGroup);
+        : GetCustomizeAppConfig(env, dbGroup);a
 });
 
 app.MapGet("/local/{group?}/{serviceName?}", (string group, string serviceName) =>
